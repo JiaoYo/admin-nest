@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { ApiTags, ApiOperation, ApiBasicAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 @ApiTags('角色')
 @Controller('role')
-@ApiBasicAuth()
+@ApiBearerAuth()
 export class RoleController {
   constructor(private readonly roleService: RoleService) { }
   @Post('list')

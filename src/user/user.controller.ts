@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Headers } fro
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags, ApiOperation, ApiBasicAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 @ApiTags('用户')
 @Controller('user')
-@ApiBasicAuth()
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) { }
   @Post('regUser')

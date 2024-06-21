@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { DictService } from './dict.service';
 import { CreateDictDto } from './dto/create-dict.dto';
 import { UpdateDictDto } from './dto/update-dict.dto';
-import { ApiTags, ApiOperation, ApiBasicAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 @ApiTags('字典')
 @Controller('dict')
+@ApiBearerAuth()
 export class DictController {
   constructor(private readonly dictService: DictService) { }
   @Post('set')

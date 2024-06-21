@@ -50,5 +50,6 @@ export class SocketService {
   async withdrawMessage(id: number, client) {
     const socket = await this.socket.createQueryBuilder('socket');
     socket.update().set({ status: 1 }).where('id = :id', { id }).execute();
+    client.emit('withdrawMessageAll', id);
   }
 }
