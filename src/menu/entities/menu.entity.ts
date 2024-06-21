@@ -4,10 +4,10 @@ export class Menu {
   @PrimaryGeneratedColumn()
   id: number; // 标记为主列，值自动生成
   @Column({ type: "int", default: 0 })
-  pid: string;
-  @Column({ type: "varchar", length: 255 })
+  pid: number;
+  @Column({ type: "varchar", length: 255 , nullable: true })
   path: string;
-  @Column({ type: "varchar", length: 255 })
+  @Column({ type: "varchar", length: 255 , nullable: true })
   component: string;
   @Column({ type: "varchar", length: 255, nullable: true })
   redirect: string;

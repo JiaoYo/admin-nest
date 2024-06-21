@@ -4,7 +4,7 @@ export class CreateMenuDto {
   @ApiProperty({ description: 'id' })
   id: number; // 标记为主列，值自动生成
   @ApiProperty({ description: 'pid' })
-  pid: string;
+  pid: number;
   path: string;
   component: string;
   redirect: string;
@@ -30,4 +30,8 @@ export class CreateMenuDto {
   showInTabs: number;
   alwaysShow: number;
   affix: number;
+}
+export class DelMenuDto{
+  @ApiProperty({ description: 'id' })
+  id: number;
 }

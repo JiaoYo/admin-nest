@@ -13,6 +13,7 @@ import { GlobalGuard } from './global.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './global.serice';
 import { SocketModule } from './socket/socket.module';
+import { User } from './user/entities/user.entity'
 const config = require('./config')
 @Module({
   imports: [
@@ -22,6 +23,7 @@ const config = require('./config')
         expiresIn: config.expiresIn, // jwt有效期
       }
     }),
+    TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',

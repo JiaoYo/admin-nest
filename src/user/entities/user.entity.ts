@@ -20,8 +20,8 @@ export class User {
   gender: boolean;
   @Column({ type: 'tinyint', default: true })
   disabled: boolean;
-  @Column({ type: 'datetime', default: null })
-  createTime: string;
+  @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP " })
+  createTime: Date;
   @Column({ type: 'tinyint', default: true })
   status: boolean;
   @Column({ type: "varchar", length: 255, default: null })

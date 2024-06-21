@@ -14,5 +14,5 @@ export class Role {
   @Column({ type: "varchar", length: 255 })
   description: string;
   @Column({ type: "varchar", length: 255, default: '[]' })
-  menus: string;
+  menus: number[];
 }

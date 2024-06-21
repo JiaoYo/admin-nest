@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
+import { setRoleMenu } from './dto/create-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity'
@@ -35,7 +34,7 @@ export class RoleService {
     return { data: roleMenuInfo, message: '获取角色权限成功' };
   }
   // 设置角色的权限
-  async setRoleMenu(body: { menus: string, id: number }) {
+  async setRoleMenu(body: setRoleMenu) {
     const role = await this.role.createQueryBuilder('role');
     role.update(Role).set({ menus: body.menus }).where('id = :id', { id: body.id }).execute();
     return { message: '设置角色权限成功' };
@@ -61,7 +60,7 @@ export class RoleService {
 
   }
   // 删除角色
-  async remove(ids: string[]) {
+  async remove(ids: number[]) {
     const qb = await this.role.createQueryBuilder('role');
     qb.delete().from(Role).where('id in (:...ids)', { ids: ids }).execute();
     return { message: '删除成功' };

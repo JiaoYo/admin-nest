@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { DeptService } from './dept.service';
-import { CreateDeptDto } from './dto/create-dept.dto';
-import { UpdateDeptDto } from './dto/update-dept.dto';
+import { CreateDeptDto ,DelDeptDto} from './dto/create-dept.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 @ApiTags('部门')
 @ApiBearerAuth()
@@ -28,7 +27,7 @@ export class DeptController {
 
   @Post('del')
   @ApiOperation({ summary: '删除部门', description: '删除部门' })
-  remove(@Body() body: { ids: number[] }) {
+  remove(@Body() body: DelDeptDto) {
     return this.deptService.remove(body.ids);
   }
 }

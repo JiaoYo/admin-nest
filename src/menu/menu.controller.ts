@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { MenuService } from './menu.service';
-import { CreateMenuDto } from './dto/create-menu.dto';
+import { CreateMenuDto, DelMenuDto } from './dto/create-menu.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 @ApiTags('菜单')
 @Controller('menu')
@@ -14,7 +14,7 @@ export class MenuController {
   }
   @Get(':id')
   @ApiOperation({ summary: '获取菜单详情', description: '获取菜单详情' })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.menuService.findOne(+id);
   }
   @Post('set')
@@ -24,7 +24,7 @@ export class MenuController {
   }
   @Post('del')
   @ApiOperation({ summary: '删除菜单', description: '删除一个菜单' })
-  remove(@Body() body: { id: number }) {
+  remove(@Body() body: DelMenuDto) {
     return this.menuService.remove(body.id);
   }
 }
