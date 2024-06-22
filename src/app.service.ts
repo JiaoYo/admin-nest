@@ -23,10 +23,10 @@ export class AppService {
     const testPassword = results[0].password
     const isPasswordValid = await bcrypt.compare(password, testPassword);
     if (!isPasswordValid) {
-      return { message: '密码错误' }
+      throw new HttpException('密码错误', 401);
     }
     if (!results[0].status) {
-      return { message: '用户被禁用' }
+      throw new HttpException('用户被禁用', 401);
     }
     const obj = {
       username,
@@ -54,5 +54,26 @@ export class AppService {
     userinfo.createTime = new Date()
     qb.insert().into(User).values(userinfo).execute();
     return { message: '注册成功' }
+  }
+  // 设置密码
+  async setPassword(data: any) {
+    const { oldPassword, newPassword, id } = data;
+    const qb = await this.user.createQueryBuilder('user');
+    qb.where('id = :id', { id })
+    const results = await qb.getOne();
+    const isPasswordValid = await bcrypt.compare(oldPassword, results.password);
+    if (!isPasswordValid) {
+      throw new HttpException('原密码错误', 401);
+    }
+    results.password = await bcrypt.hashSync(newPassword, 10);
+    qb.update().set(results).where('id = :id', { id }).execute();
+    return { message: '密码修改成功' }
+  }
+  // 设置头像
+  async setAvatar(data: any) {
+    const { avatar, id } = data;
+    const qb = await this.user.createQueryBuilder('user');
+    qb.update().set({ avatar }).where('id = :id', { id }).execute();
+    return { message: '头像修改成功' }
   }
 }

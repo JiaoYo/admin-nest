@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Headers } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiTags, ApiOperation, ApiProperty } from '@nestjs/swagger';
 class loginDto {
@@ -12,6 +12,20 @@ class regUserDto {
   username: string;
   @ApiProperty({ description: '密码', example: '123456' })
   password: string;
+}
+class setPsdDto {
+  @ApiProperty({ description: 'ID' })
+  id: number
+  @ApiProperty({ description: '密码', example: '123456' })
+  oldPassword: string;
+  @ApiProperty({ description: '新密码', example: '123456' })
+  newPassword: string;
+}
+class setAvatarDto {
+  @ApiProperty({ description: 'ID' })
+  id: number
+  @ApiProperty({ description: '头像' })
+  avatar: string;
 }
 @ApiTags('登录登出')
 @Controller()
@@ -31,5 +45,15 @@ export class AppController {
   @ApiOperation({ summary: '登出' })
   logout() {
     return { message: '退出成功' }
+  }
+  @Post('updatePassword')
+  @ApiOperation({ summary: '设置密码' })
+  setPassword(@Body() data: setPsdDto) {
+    return this.appService.setPassword(data);
+  }
+  @Post('setAvatar')
+  @ApiOperation({ summary: '设置头像' })
+  setAvatar(@Body() data: setAvatarDto) {
+    return this.appService.setAvatar(data);
   }
 }

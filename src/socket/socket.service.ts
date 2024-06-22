@@ -27,7 +27,8 @@ export class SocketService {
     }
     const obj = formatMessage(body[0], body[1], body[2], body[3]);
     const socket = await this.socket.createQueryBuilder('socket');
-    socket.insert().into(Socket).values(obj).execute();
+    const newSocket = await socket.insert().into(Socket).values(obj).execute();
+    obj['id'] = newSocket.identifiers[0].id
     // 发送消息
     if (body[3] == "user") {
       client.emit('message', obj);

@@ -18,7 +18,7 @@ export class User {
   avatar: string;
   @Column({ type: 'tinyint', default: true })
   gender: boolean;
-  @Column({ type: 'tinyint', default: true })
+  @Column({ type: 'tinyint', default: 0 })
   disabled: boolean;
   @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP " })
   createTime: Date;
@@ -30,7 +30,7 @@ export class User {
   roleIds: Array<string>;
   @Column({ type: "varchar", length: 255, default: null })
   roleNames: string;
-  @Column({ type: "varchar", length: 255, default: null })
+  @Column({ type: "int", default: null })
   deptId: number;
   @Column({ type: "varchar", length: 255, default: null })
   deptName: string;

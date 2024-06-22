@@ -11,6 +11,6 @@ export class UploadController {
   @ApiOperation({ summary: '上传图片' })
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file) {
-    return { data: 'localhost:8888/img/' + file.filename }
+    return { data: '/img/' + file.filename }
   }
 }
