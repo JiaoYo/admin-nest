@@ -19,13 +19,12 @@ export class SocketGateway {
   }
   @SubscribeMessage('join')
   join(@MessageBody() name: string, @ConnectedSocket() client: Socket) {
-    // if (name == 'jiaoy') {
     client.join('room')
-    // }
+    this.socketService.join(name, client);
   }
   @SubscribeMessage('chatMessage')
-  create(@MessageBody() body: any) {
-    return this.socketService.create(body, this.server);
+  create(@MessageBody() body: any, @ConnectedSocket() client: Socket) {
+    return this.socketService.create(body, this.server, client);
   }
 
   @SubscribeMessage('withdraw')
