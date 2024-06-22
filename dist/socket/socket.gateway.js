@@ -25,9 +25,10 @@ let SocketGateway = class SocketGateway {
     }
     join(name, client) {
         client.join('room');
+        this.socketService.join(name, client);
     }
-    create(body) {
-        return this.socketService.create(body, this.server);
+    create(body, client) {
+        return this.socketService.create(body, this.server, client);
     }
     withdrawMessage(id) {
         return this.socketService.withdrawMessage(id, this.server);
@@ -57,8 +58,9 @@ __decorate([
 __decorate([
     (0, websockets_1.SubscribeMessage)('chatMessage'),
     __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", void 0)
 ], SocketGateway.prototype, "create", null);
 __decorate([

@@ -21,7 +21,10 @@ let SocketService = class SocketService {
     constructor(socket) {
         this.socket = socket;
     }
-    async create(body, client) {
+    join(name, socket) {
+        socket.join(name);
+    }
+    async create(body, client, socket) {
         const formatMessage = (form, to, message, type) => {
             return {
                 formName: form.nickname,
@@ -36,18 +39,24 @@ let SocketService = class SocketService {
             };
         };
         const obj = formatMessage(body[0], body[1], body[2], body[3]);
-        const socket = await this.socket.createQueryBuilder('socket');
-        const newSocket = await socket.insert().into(socket_entity_1.Socket).values(obj).execute();
-        obj['id'] = newSocket.identifiers[0].id;
+        const result = await this.socket
+            .createQueryBuilder()
+            .insert()
+            .into(socket_entity_1.Socket)
+            .values(obj)
+            .execute();
+        const newSocketId = result.identifiers[0].id;
+        obj['id'] = newSocketId;
         if (body[3] == "user") {
-            client.emit('message', obj);
+            socket.emit('message1', newSocketId);
+            socket.broadcast.to(body[1].nickname).emit('message', obj);
         }
         else {
             client.to('room').emit('message', obj);
         }
     }
     async gethistoryData(name, client) {
-        const socket = await this.socket.createQueryBuilder('socket');
+        const socket = this.socket.createQueryBuilder('socket');
         const res = await socket.getMany();
         socket.where('formName = :formName OR toName = :formName ', { formName: name });
         let result = await socket.getMany();
@@ -55,10 +64,10 @@ let SocketService = class SocketService {
         const roomMessages = res.filter(item => item.toName === "聊天室");
         client.emit('historyData', userMessages, roomMessages);
     }
-    async withdrawMessage(id, client) {
-        const socket = await this.socket.createQueryBuilder('socket');
-        socket.update().set({ status: 1 }).where('id = :id', { id }).execute();
-        client.emit('withdrawMessageAll', id);
+    async withdrawMessage(id, sockets) {
+        const socket = this.socket.createQueryBuilder('socket');
+        await socket.update().set({ status: 1, message: '' }).where('id = :id', { id }).execute();
+        sockets.emit('withdrawMessageAll');
     }
 };
 exports.SocketService = SocketService;

@@ -6,6 +6,6 @@ export declare class SocketGateway {
     server: Server;
     gethistoryData(name: string, client: Socket): void;
     join(name: string, client: Socket): void;
-    create(body: any): Promise<void>;
+    create(body: any, client: Socket): Promise<void>;
     withdrawMessage(id: number): Promise<void>;
 }
