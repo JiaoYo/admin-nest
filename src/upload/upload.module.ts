@@ -7,7 +7,7 @@ import { extname, join } from 'path';
 @Module({
   imports: [MulterModule.register({
     storage: diskStorage({
-      destination: join(__dirname, "../images"),
+      destination: 'images', // 设置上传文件的路径
       filename: (_, file, callback) => {
         const fileName = `${new Date().getTime() + extname(file.originalname)}`
         return callback(null, fileName)

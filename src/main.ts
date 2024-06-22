@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { Response } from './common/response';
 import { HttpFilter } from './common/filter';
 import { join } from 'path'
+import * as express from 'express'; // 导入 Express 模块
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 const moment = require('moment')
 Date.prototype.toISOString = function () {
@@ -16,10 +17,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new Response()) // 设置全局响应拦截器
   app.useGlobalFilters(new HttpFilter()) // 设置全局异常拦截器
-  app.useStaticAssets(join(__dirname, 'images'), {
-    prefix: "/img"
-  })
   app.enableCors()
+  app.use('/img', express.static(join(__dirname, '../images')));
   // 设置swagger文档
   const config = new DocumentBuilder()
     .setTitle('管理后台')
