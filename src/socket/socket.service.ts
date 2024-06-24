@@ -62,7 +62,7 @@ export class SocketService {
   // 撤回消息
   async withdrawMessage( id: number ,sockets:any) {
     const socket = this.socket.createQueryBuilder('socket');
-    await socket.update().set({ status: 1, message: '' }).where('id = :id', { id }).execute();
+    await socket.update().set({ status: 1}).where('id = :id', { id }).execute();
     sockets.emit('withdrawMessageAll');
   }
 }
