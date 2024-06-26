@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./config') // 配置文件
+import { RedisService } from './redis'
 import { User } from './user/entities/user.entity'
 @Injectable()
 export class AppService {
   constructor(
     @InjectRepository(User)
     private readonly user: Repository<User>,
+    private readonly redisService: RedisService,
   ) { }
   // 登录
   async login(data: any) {
@@ -34,6 +36,7 @@ export class AppService {
       id: results[0].id,
     }
     const token = jwt.sign({ obj }, config.jwtSecretKey, { expiresIn: config.expiresIn });
+    this.redisService.setValue(username, token)
     return { data: { token: 'Bearer ' + token }, message: '登录成功' }
   }
   // 注册

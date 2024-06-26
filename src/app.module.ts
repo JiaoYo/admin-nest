@@ -14,6 +14,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './global.serice';
 import { SocketModule } from './socket/socket.module';
 import { User } from './user/entities/user.entity'
+import { RedisService } from './redis'
+import { Redis } from 'ioredis'
 const config = require('./config')
 @Module({
   imports: [
@@ -41,6 +43,7 @@ const config = require('./config')
   providers: [{
     provide: APP_INTERCEPTOR,
     useClass: GlobalGuard,
-  }, AppService, AuthService],
+  }, AppService, AuthService, RedisService, Redis],
+  exports: [RedisService]
 })
 export class AppModule { }

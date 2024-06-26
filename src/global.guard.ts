@@ -1,12 +1,15 @@
-import { Injectable, NestInterceptor, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, HttpException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from './global.serice';
 const config = require('./config')
+const jwt = require('jsonwebtoken');
+import { RedisService } from './redis'
 @Injectable()
 export class GlobalGuard implements NestInterceptor {
-  constructor(private authService: AuthService) { }
-  intercept(context: ExecutionContext, next): Observable<any> {
+  constructor(private authService: AuthService,
+    private readonly redisService: RedisService) { }
+  async intercept(context: ExecutionContext, next): Promise<Observable<any>> {
     // 在这里执行全局守卫逻辑
     const request = context.switchToHttp().getRequest();
     // 从请求头中获取 token
@@ -20,7 +23,18 @@ export class GlobalGuard implements NestInterceptor {
         // return new HttpException('无token或token无效', HttpStatus.FORBIDDEN);
         return next.handle().pipe(map(() => {
           // 如果没有提供令牌，返回错误响应或执行其他逻辑
-          return new HttpException('无token或token无效', HttpStatus.FORBIDDEN);
+          return new HttpException('无token或token无效', 401);
+        }));
+      }
+    }
+    if (token) {
+      const newtoken = token?.replace('Bearer', '').trim()
+      const user = jwt.verify(newtoken, config.jwtSecretKey);
+      // 验证token是否有效
+      const obj = await this.redisService.getValue(user.obj.username)
+      if (obj !== newtoken) {
+        return next.handle().pipe(map(() => {
+          return new HttpException('异地登录，请重新登录', 401);
         }));
       }
     }
