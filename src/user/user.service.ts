@@ -23,6 +23,14 @@ export class UserService {
       qb.update().set(data).where('id = :id', { id: data.id }).execute();
       return { message: '修改成功' }
     }
+    qb.where('username = :username', { username: data.username })
+    const results = await qb.getMany();
+    if (results.length > 0) {
+      throw new HttpException('用户名已存在', 401);
+    }
+    data.password = await bcrypt.hashSync(data.password, 10);
+    data.createTime = new Date()
+    delete data.id
     qb.insert().into(User).values(data).execute();
     return { message: '添加成功' }
   }

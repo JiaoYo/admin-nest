@@ -14,7 +14,7 @@ export class User {
   nickname: string;
   @Column({ type: "varchar", length: 255, default: null })
   email: string;
-  @Column({ type: "varchar", length: 255, default: 'http://www.jy2002.love/assets/infourl-3lzKe2gJ.png' })
+  @Column({ type: "varchar", length: 255, default: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif' })
   avatar: string;
   @Column({ type: 'tinyint', default: true })
   gender: boolean;
