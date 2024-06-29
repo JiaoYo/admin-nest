@@ -11,8 +11,8 @@ export class SocketService {
     private readonly socket: Repository<Socket>,
   ) { }
   // 给每个人分配一个房间
-  join(name: string, socket: any) {
-    socket.join(name);
+  join(id: string, socket: any) {
+    socket.join(id);
   }
   // 创建消息
   async create(body: any, client: any, socket: any) {
@@ -41,18 +41,18 @@ export class SocketService {
     // 发送消息
     if (body[3] == "user") {
       socket.emit('message1', newSocketId);
-      // socket.broadcast.to(body[0].nickname).emit('message', obj);
-      socket.broadcast.to(body[1].nickname).emit('message', obj);
+      // socket.broadcast.to(body[0].id).emit('message', obj);
+      socket.broadcast.to(body[1].id).emit('message', obj);
     } else {
       client.to('room').emit('message', obj);
     }
 
   }
   // 获取历史消息
-  async gethistoryData(name: string, client: any) {
+  async gethistoryData(id: string, client: any) {
     const socket = this.socket.createQueryBuilder('socket');
     const res = await socket.getMany();
-    socket.where('formName = :formName OR toName = :formName ', { formName: name });
+    socket.where('formId = :id OR toId = :id ', { id });
     let result = await socket.getMany();
     // 过滤出用户和聊天室的消息
     const userMessages = result.filter(item => item.toName !== "聊天室");

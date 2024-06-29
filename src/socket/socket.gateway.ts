@@ -14,13 +14,13 @@ export class SocketGateway {
   @WebSocketServer()
   server: Server;
   @SubscribeMessage('historyData')
-  gethistoryData(@MessageBody() name: string, @ConnectedSocket() client: Socket) {
-    this.socketService.gethistoryData(name, client);
+  gethistoryData(@MessageBody() id: string, @ConnectedSocket() client: Socket) {
+    this.socketService.gethistoryData(id, client);
   }
   @SubscribeMessage('join')
-  join(@MessageBody() name: string, @ConnectedSocket() client: Socket) {
+  join(@MessageBody() id: string, @ConnectedSocket() client: Socket) {
     client.join('room')
-    this.socketService.join(name, client);
+    this.socketService.join(id, client);
   }
   @SubscribeMessage('chatMessage')
   create(@MessageBody() body: any, @ConnectedSocket() client: Socket) {
