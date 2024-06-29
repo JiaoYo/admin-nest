@@ -69,14 +69,14 @@ export class AppService {
       throw new HttpException('原密码错误', 401);
     }
     results.password = await bcrypt.hashSync(newPassword, 10);
-    qb.update().set(results).where('id = :id', { id }).execute();
+    qb.update().set({ password: results.password }).where('id = :id', { id }).execute();
     return { message: '密码修改成功' }
   }
   // 设置头像
   async setAvatar(data: any) {
     const { avatar, id } = data;
     const qb = await this.user.createQueryBuilder('user');
-    qb.update().set({ avatar }).where('id = :id', { id }).execute();
-    return { message: '头像修改成功' }
+    qb.update().set(data).where('id = :id', { id }).execute();
+    return { message: '修改成功' }
   }
 }
