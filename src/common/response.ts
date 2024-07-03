@@ -2,6 +2,7 @@ import { Injectable, NestInterceptor, CallHandler } from '@nestjs/common'
 import { map } from 'rxjs/operators'
 import { Observable } from 'rxjs'
 @Injectable()
+// 响应拦截器
 export class Response<T = any> implements NestInterceptor {
   intercept(context, next: CallHandler): Observable<any> {
     return next.handle().pipe(map((res = {}) => {

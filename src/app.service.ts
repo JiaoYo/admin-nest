@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('./config') // 配置文件
-import { RedisService } from './redis'
+import { RedisService } from './common/redis'
 import { User } from './user/entities/user.entity'
 @Injectable()
 export class AppService {
@@ -31,6 +31,7 @@ export class AppService {
       throw new HttpException('用户被禁用', 401);
     }
     const obj = {
+      roleIds: results[0].roleIds,
       username,
       password,
       id: results[0].id,

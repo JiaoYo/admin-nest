@@ -4,6 +4,7 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/co
 import { Request, Response } from 'express'
 
 @Catch(HttpException)
+// 异常过滤器
 export class HttpFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
@@ -11,8 +12,7 @@ export class HttpFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>()
     const status = exception.getStatus()
     response.status(status).json({
-      // data: (exception as any).response.message?.[0] || exception.message ,
-      message: (exception as any).response.message?.[0] || exception.message ,
+      message: (exception as any).response.message?.[0] || exception.message,
       success: false,
       path: request.url,
       status

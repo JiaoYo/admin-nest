@@ -9,13 +9,14 @@ import { DictModule } from './dict/dict.module';
 import { DeptModule } from './dept/dept.module';
 import { UploadModule } from './upload/upload.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GlobalGuard } from './global.guard';
+import { GlobalGuard } from './common/global.guard';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './global.serice';
+import { AuthService } from './common/global.serice';
 import { SocketModule } from './socket/socket.module';
 import { User } from './user/entities/user.entity'
-import { RedisService } from './redis'
+import { RedisService } from './common/redis'
 import { Redis } from 'ioredis'
+import { ScheduleModule } from './schedule/schedule.module';
 const config = require('./config')
 @Module({
   imports: [
@@ -38,7 +39,7 @@ const config = require('./config')
       timezone: '+08:00', //服务器上配置的时区
       autoLoadEntities: true,
     }),
-    UserModule, MenuModule, RoleModule, DictModule, DeptModule, UploadModule, SocketModule],
+    UserModule, MenuModule, RoleModule, DictModule, DeptModule, UploadModule, SocketModule, ScheduleModule],
   controllers: [AppController],
   providers: [{
     provide: APP_INTERCEPTOR,

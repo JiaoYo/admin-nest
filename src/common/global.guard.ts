@@ -2,7 +2,7 @@ import { Injectable, NestInterceptor, ExecutionContext, HttpException } from '@n
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from './global.serice';
-const config = require('./config')
+const config = require('../config')
 const jwt = require('jsonwebtoken');
 import { RedisService } from './redis'
 @Injectable()
@@ -20,7 +20,6 @@ export class GlobalGuard implements NestInterceptor {
       // 需要鉴权才能访问的接口
       const validRes = this.authService.validateToken(token?.replace('Bearer', '').trim() || '');
       if (!validRes) {
-        // return new HttpException('无token或token无效', HttpStatus.FORBIDDEN);
         return next.handle().pipe(map(() => {
           // 如果没有提供令牌，返回错误响应或执行其他逻辑
           return new HttpException('无token或token无效', 401);
