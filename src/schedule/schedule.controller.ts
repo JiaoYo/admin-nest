@@ -5,6 +5,7 @@ import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 @ApiTags('日程')
 @Controller('schedule')
+@ApiBearerAuth()
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) { }
 
