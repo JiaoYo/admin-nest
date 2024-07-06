@@ -10,7 +10,6 @@ import { Schedule } from './entities/schedule.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Server, Socket } from 'socket.io';
 const schedule = require('node-schedule');
-
 @WebSocketGateway({ cors: { origin: '*' }, namespace: 'schedule' })
 export class SocketScheduleGateway {
   private scheduledJobs: { [key: string]: any } = {}; // Object to store scheduled jobs
@@ -18,7 +17,9 @@ export class SocketScheduleGateway {
   constructor(
     @InjectRepository(Schedule)
     private readonly scheduleRepository: Repository<Schedule>,
-  ) { }
+  ) {
+    this.startScheduledJob();
+  }
 
   @WebSocketServer()
   server: Server;
@@ -28,23 +29,27 @@ export class SocketScheduleGateway {
     client.join(id);
   }
 
-  @SubscribeMessage('taskActivation')
-  async not(@ConnectedSocket() client: Socket) {
+  // 开始定时任务
+  private startScheduledJob() {
+    const intervalTime = 60000; // 一分钟
+    setInterval(() => {
+      this.handleInterval();
+    }, intervalTime);
+  }
+  // 处理定时任务的逻辑
+  private async handleInterval() {
     this.cancelScheduledJobs();
-    const filterTime = (time: Date, remind: number) => {
+    const filterTime = (time: Date, remind: number): string => {
       const result = new Date(time);
       result.setMinutes(result.getMinutes() - remind);
-      const filterTime1 = (originalDateTimeString: Date) => {
-        const date = new Date(originalDateTimeString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从0开始，需要加1，然后补齐两位数
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-      }
-      return filterTime1(result);
+      const padNumber = (num: number): string => String(num).padStart(2, '0');
+      const year = result.getFullYear();
+      const month = padNumber(result.getMonth() + 1);
+      const day = padNumber(result.getDate());
+      const hours = padNumber(result.getHours());
+      const minutes = padNumber(result.getMinutes());
+      const seconds = padNumber(result.getSeconds());
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
     const queryBuilder = this.scheduleRepository.createQueryBuilder('schedule');
     const result = await queryBuilder.where('schedule.remind != 1').andWhere('start > :now', { now: new Date() }).getMany();
@@ -53,7 +58,7 @@ export class SocketScheduleGateway {
       if (item.remind == '1') return
       const time = filterTime(item.start, +item.remind);
       const job = schedule.scheduleJob(time, () => {
-        peopleArr.forEach(element => {
+        peopleArr.forEach((element: any) => {
           this.server.to(String(element)).emit('message', { title: item.title, start: item.start });
         });
       });
@@ -67,6 +72,6 @@ export class SocketScheduleGateway {
         job.cancel();
       }
     });
-    this.scheduledJobs = {}; // Clear the object
+    this.scheduledJobs = {};
   }
 }
