@@ -59,7 +59,7 @@ export class UploadController {
         console.log('上传成功');
       }
     });
-    return { data: (chunkIndex + 1) / total, message: `切片${chunkIndex}上传成功` }
+    return { data: (+chunkIndex + 1) / +total, message: `切片${chunkIndex}上传成功` }
   }
 
   @Post('fileMerge')
