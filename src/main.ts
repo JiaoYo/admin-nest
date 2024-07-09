@@ -18,7 +18,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new Response()) // 设置全局响应拦截器
   app.useGlobalFilters(new HttpFilter()) // 设置全局异常拦截器
   app.enableCors()
-  app.use('/img', express.static(join(__dirname, '../images')));
+  app.use('/img', express.static(join(__dirname, '../uploads')));
+  app.use('/files', express.static(join(__dirname, '../uploads')));
   // 设置swagger文档
   const config = new DocumentBuilder()
     .setTitle('管理后台')
