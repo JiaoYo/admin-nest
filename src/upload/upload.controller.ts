@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseInterceptors, UploadedFile, Param, Query } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { RedisService } from '../common/redis'
@@ -85,4 +85,9 @@ export class UploadController {
     return { data: '/files/' + fileName.split(".").pop() + '/' + fileName }
   }
 
+  @Get('fileList')
+  @ApiOperation({ summary: '获取文件列表' })
+  fileList(@Query() params: { fileType: string | number ,fileName:string }) {
+    return this.uploadService.fileList(params);
+  }
 }
