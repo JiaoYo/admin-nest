@@ -8,7 +8,7 @@ const config = require('../config') // 配置文件
  */
 export const Role = createParamDecorator((roleList: string[], ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest();
-  const queryParam = request.query;
+  const Param = JSON.stringify(request.query) == '{}' ? request.body : request.query;
   const token = request.headers['authorization'].replace('Bearer', '').trim();
   // TODO 需要从缓存或数据库中读取用户数据，得到用户所属权限
   const obj = jwt.verify(token, config.jwtSecretKey);
@@ -26,5 +26,5 @@ export const Role = createParamDecorator((roleList: string[], ctx: ExecutionCont
   if (!haveCommonElements(JSON.parse(UserRoleList), roleList)) {
     throw new HttpException('权限不足', 403);
   }
-  return queryParam
+  return Param
 });

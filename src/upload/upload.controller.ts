@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, UseInterceptors, UploadedFile, Param, Quer
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { RedisService } from '../common/redis'
+import { Role } from '../common/role.decorator'
 import {
   rename,
   existsSync,
@@ -92,7 +93,7 @@ export class UploadController {
   }
   @Post('fileDelete')
   @ApiOperation({ summary: '删除文件' })
-  fileDelete(@Body() body) {
+  fileDelete( @Role(["role_admin"]) @Body() body) {
     return this.uploadService.fileDelete(body);
   }
 
