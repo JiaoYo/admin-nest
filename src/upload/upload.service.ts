@@ -43,23 +43,30 @@ export class UploadService {
   getList(type: number | string, fileList) {
     const FileMap = {
       1: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
-      2: ['txt', 'doc', 'xls'],
-      3: ['mp4'],
-      4: ['mp3', 'flac'],
-      5: ['zip', 'rar', 'ppt', 'css', 'js', 'html', 'gz', 'tar', 'vue']
+      2: ['txt', 'doc', 'xls', 'ppt', , 'md'],
+      3: ['less', 'ts', 'jsx', 'css', 'js', 'html', 'vue', 'json', 'sql'],
+      4: ['mp4'],
+      5: ['mp3', 'flac'],
+      6: ['zip', 'rar', 'gz', 'tar'],
     }
     let FileMapArr = Object.keys(FileMap)
-    let fileTypes = FileMapArr.map((item) => [])
-    FileMapArr.forEach((item, index) => {
-      FileMap[item].forEach((i) => {
-        const items = fileList.filter((element) => element.extendName === i)
-        fileTypes[index].push(...items)
-      })
-    })
-    const sizes = []
-    fileTypes.forEach((item, index) => {
-      sizes[index] = item.reduce((pre, cur) => pre + cur.size, 0)
-    })
+    // let fileTypes = FileMapArr.map((item) => [])
+    // FileMapArr.forEach((item, index) => {
+    //   FileMap[item].forEach((i) => {
+    //     const items = fileList.filter((element) => element.extendName === i)
+    //     fileTypes[index].push(...items)
+    //   })
+    // })
+    // const sizes = []
+    // fileTypes.forEach((item, index) => {
+    //   sizes[index] = item.reduce((pre, cur) => pre + cur.size, 0)
+    // })
+    const sizes = FileMapArr.map((item) => {
+      return FileMap[item].reduce((totalSize, fileType) => {
+        const items = fileList.filter((element) => element.extendName === fileType);
+        return totalSize + items.reduce((total, file) => total + file.size, 0);
+      }, 0);
+    });
     if (Number(type) === 0) return { res: fileList, sizes }
     const res: any[] = []
     const arr = FileMap[type as keyof typeof FileMap] || []
@@ -69,9 +76,11 @@ export class UploadService {
     })
     return { res, sizes }
   }
+  /** 获取文件列表 */
   async fileList(params: { fileType: string | number, fileName: string }) {
     const folderPath = 'uploads';
     const itemsInfo = this.getAllFilesInfo(folderPath);
+    // 拍平数组
     function flattenArray(arr) {
       return arr.reduce((flat, item) => {
         flat.push(item);
@@ -90,5 +99,11 @@ export class UploadService {
       res = res.filter((item) => item.name.includes(fileName))
     }
     return { data: { data: res, sizes } }
+  }
+  async fileDelete(data: { path: 'string', fileName: string }) {
+    const { path: Path, fileName } = data
+    const filePath =  'uploads'+ Path
+    fs.unlinkSync(filePath)
+    return { data: '删除成功' }
   }
 }

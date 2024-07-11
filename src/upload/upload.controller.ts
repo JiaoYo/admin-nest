@@ -87,7 +87,13 @@ export class UploadController {
 
   @Get('fileList')
   @ApiOperation({ summary: '获取文件列表' })
-  fileList(@Query() params: { fileType: string | number ,fileName:string }) {
+  fileList(@Query() params: { fileType: string | number, fileName: string }) {
     return this.uploadService.fileList(params);
   }
+  @Post('fileDelete')
+  @ApiOperation({ summary: '删除文件' })
+  fileDelete(@Body() body) {
+    return this.uploadService.fileDelete(body);
+  }
+
 }
