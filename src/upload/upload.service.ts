@@ -43,7 +43,7 @@ export class UploadService {
   getList(type: number | string, fileList) {
     const FileMap = {
       1: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
-      2: ['txt', 'doc', 'xls', 'ppt', , 'md'],
+      2: ['txt', 'doc', 'xls', 'ppt', 'md', 'pdf', 'docx', 'xlsx', 'pptx', 'md'],
       3: ['less', 'ts', 'jsx', 'css', 'js', 'html', 'vue', 'json', 'sql'],
       4: ['mp4'],
       5: ['mp3', 'flac'],
@@ -102,7 +102,7 @@ export class UploadService {
   }
   async fileDelete(data: { path: 'string', fileName: string }) {
     const { path: Path, fileName } = data
-    const filePath =  'uploads'+ Path
+    const filePath = 'uploads' + Path
     fs.unlinkSync(filePath)
     return { data: '删除成功' }
   }
